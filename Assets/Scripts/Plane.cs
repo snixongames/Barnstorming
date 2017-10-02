@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class Plane : MonoBehaviour
 {
-    public float currentSpeed = 6;
-    float maxSpeed = 15;
-    float minSpeed = 1;
+    public static int health = 10;
+
+    public float currentSpeed = 6f;
+    float maxSpeed = 15f;
+    float minSpeed = 5f;
     float accelerateSpeed = 0.02f;
     float deccelerateSpeed = 0.01f;
 

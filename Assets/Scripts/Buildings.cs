@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Circle : MonoBehaviour
-{
-    public float currentSpeed = 4f;
+public class Buildings : MonoBehaviour {
+
+    public float currentSpeed = 6f;
 
     void Update()
     {
