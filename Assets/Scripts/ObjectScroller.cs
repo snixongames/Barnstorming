@@ -8,6 +8,7 @@ public class ObjectScroller : MonoBehaviour
     public float tileSizeX;
 
     public Vector3 startPos;
+    public Vector3 newPos;
 
     // Use this for initialization
     void Start()
@@ -18,7 +19,16 @@ public class ObjectScroller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float newPos = Mathf.Repeat(Time.time * scrollSpeed, tileSizeX);
-        transform.position = startPos + Vector3.left * newPos;
+        if (gameObject.tag == "Background")
+            scrollSpeed = Plane.currentSpeed / 2;
+
+        if (gameObject.tag == "Foreground")
+            scrollSpeed = Plane.currentSpeed;
+
+        transform.Translate(Vector2.left * scrollSpeed * Time.deltaTime);
+        newPos = transform.position;
+        if (newPos.x <= startPos.x - tileSizeX)
+            transform.position = startPos;
+
     }
 }

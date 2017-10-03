@@ -6,14 +6,15 @@ public class Plane : MonoBehaviour
 {
     public static int health = 10;
 
-    public float currentSpeed = 6f;
-    float maxSpeed = 15f;
+    public static float currentSpeed = 6f;
+    float antiSpeed;
+    float maxSpeed = 12f;
     float minSpeed = 5f;
     float accelerateSpeed = 0.02f;
-    float deccelerateSpeed = 0.01f;
+    float deccelerateSpeed = 0.02f;
 
     float rateOfDecrease;
-    bool collision = false;
+    public static bool collision = false;
 
     // Use this for initialization
     void Start()
@@ -29,16 +30,24 @@ public class Plane : MonoBehaviour
             Movement();
             Boost();
         }
-        if (collision == true)
-        {
 
+        if (GameManager.barnCount == 0)
+        {
+            collision = true;
+
+            if (currentSpeed > 0)
+            currentSpeed = currentSpeed - deccelerateSpeed;
+
+            Vector3 pos = transform.position;
+            if (pos.y > 0.7)
+            transform.Translate(Vector2.down * currentSpeed * Time.deltaTime);
         }
     }
 
     void Movement()
     {
         Vector3 pos = transform.position;
-        if (Input.GetKey(KeyCode.UpArrow) && (pos.y <= 7.5))
+        if (Input.GetKey(KeyCode.UpArrow) && (pos.y <= 8.5))
             transform.Translate(Vector2.up * currentSpeed * Time.deltaTime);
         else if (Input.GetKey(KeyCode.DownArrow) && (pos.y >= 0.5))
             transform.Translate(Vector2.down * currentSpeed * Time.deltaTime);
@@ -53,18 +62,29 @@ public class Plane : MonoBehaviour
             currentSpeed = currentSpeed - deccelerateSpeed;
     }
 
-    void Knockback(int timeTaken)
+    IEnumerator Knockback(float timeTaken)
     {
-        rateOfDecrease = currentSpeed - minSpeed / timeTaken;
+        collision = true;
+        currentSpeed = currentSpeed * -1;
+        yield return new WaitForSeconds(timeTaken);
+        currentSpeed = minSpeed;
+        collision = false;
     }
 
     // if hit then calculate rateOfDecrease with a certain value
     void OnTriggerEnter2D(Collider2D obj)
     {
-        collision = true;
         if (obj.gameObject.tag == "Barn" || obj.gameObject.tag == "Windmill")
-            Knockback(3);
+        {
+            StartCoroutine(Knockback(0.5f));
+        }
         else if (obj.gameObject.tag == "Circle")
-            Knockback(1);
+        {
+            StartCoroutine(Knockback(0.2f));
+        }
+        else if (obj.gameObject.tag == "BarnMiddle")
+        {
+            GameManager.barnCount--;
+        }
     }
 }

@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Buildings : MonoBehaviour {
 
-    public float currentSpeed = 6f;
+    public float currentSpeed;
 
     void Update()
     {
+        currentSpeed = Plane.currentSpeed;
         Vector3 pos = transform.position;
         transform.Translate(Vector2.left * currentSpeed * Time.deltaTime);
 
