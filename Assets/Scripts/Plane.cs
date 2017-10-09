@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class Plane : MonoBehaviour
 {
-    public static int health = 7;
+    public static int health = 6;
 
     public static float currentSpeed;
-    public int fakeHealth;
     float antiSpeed;
     float maxSpeed = 12f;
     float minSpeed = 5f;
     float accelerateSpeed = 0.02f;
     float deccelerateSpeed = 0.02f;
+
+    public Sprite[] states;
+    public SpriteRenderer sr;
 
     float rateOfDecrease;
     public static bool collision = false;
@@ -25,12 +27,13 @@ public class Plane : MonoBehaviour
     {
         wait = false;
         currentSpeed = minSpeed;
+        sr.sprite = states[health - 1];
     }
 
     // Update is called once per frame
     void Update()
     {
-        fakeHealth = health;
+        sr.sprite = states[health - 1];
         if (collision == false)
         {
             Movement();
@@ -62,19 +65,24 @@ public class Plane : MonoBehaviour
 
     void EngineSound()
     {
-        if (health >= 5)
+        if (health >= 2)
         {
             AudioManager.instance.PlaneHighHealth();
-        }
-
-        if (health <= 4 && health >= 2)
-        {
-            AudioManager.instance.PlaneMedHealth();
         }
 
         if (health == 1)
         {
             AudioManager.instance.PlaneMedHealth();
+            Rigidbody2D[] bodies = GetComponentsInChildren<Rigidbody2D>();
+            foreach (var children in bodies)
+            {
+                children.bodyType = RigidbodyType2D.Dynamic;
+            }
+            SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
+            foreach (var children in renderers)
+            {
+                children.enabled = true;
+            }
         }
     }
 
